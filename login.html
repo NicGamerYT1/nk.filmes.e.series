@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CineVault — Entrar</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c96e;
+      --red: #c0392b;
+      --dark: #080a0f;
+      --dark2: #0e1119;
+      --dark3: #161b26;
+      --glass: rgba(255,255,255,0.04);
+      --border: rgba(201,168,76,0.2);
+      --text: #e8e2d5;
+      --muted: #7a7060;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--dark);
+      font-family: 'Outfit', sans-serif;
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 70% 40%, rgba(192,57,43,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 20% 80%, rgba(201,168,76,0.08) 0%, transparent 55%),
+        linear-gradient(160deg, #080a0f 0%, #0e1119 50%, #0a0c12 100%);
+    }
+
+    /* Film grain overlay */
+    .grain {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+
+    /* Decorative film strip left */
+    .filmstrip {
+      position: fixed; left: 0; top: 0; bottom: 0; z-index: 2;
+      width: 28px;
+      background: var(--dark3);
+      border-right: 1px solid rgba(201,168,76,0.12);
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; padding: 10px 0;
+      overflow: hidden;
+    }
+    .filmstrip::before, .filmstrip::after {
+      content: '';
+      position: absolute; left: 50%; transform: translateX(-50%);
+      width: 14px; background: var(--dark);
+      border-radius: 2px;
+    }
+    .hole {
+      width: 14px; height: 10px;
+      background: var(--dark);
+      border-radius: 2px;
+      flex-shrink: 0;
+      border: 1px solid rgba(201,168,76,0.08);
+    }
+
+    /* Filmstrip right */
+    .filmstrip-r {
+      position: fixed; right: 0; top: 0; bottom: 0; z-index: 2;
+      width: 28px;
+      background: var(--dark3);
+      border-left: 1px solid rgba(201,168,76,0.12);
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; padding: 10px 0;
+      overflow: hidden;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .page {
+      position: relative; z-index: 10;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0 44px;
+    }
+
+    /* ── LOGO ── */
+    .logo {
+      text-align: center;
+      margin-bottom: 36px;
+      animation: fadeDown 0.7s ease both;
+    }
+    .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px; height: 52px;
+      border: 1.5px solid var(--gold);
+      border-radius: 50%;
+      margin-bottom: 10px;
+      position: relative;
+    }
+    .logo-icon::before {
+      content: '▶';
+      font-size: 18px;
+      color: var(--gold);
+      margin-left: 3px;
+    }
+    .logo-icon::after {
+      content: '';
+      position: absolute; inset: 4px;
+      border-radius: 50%;
+      border: 1px solid rgba(201,168,76,0.2);
+    }
+    .logo h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 38px;
+      letter-spacing: 6px;
+      color: var(--text);
+      line-height: 1;
+    }
+    .logo h1 span { color: var(--gold); }
+    .logo p {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ── CARD ── */
+    .card {
+      width: 100%;
+      max-width: 380px;
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 36px 32px 32px;
+      position: relative;
+      animation: fadeUp 0.7s 0.15s ease both;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 32px; right: 32px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .card-title {
+      font-size: 13px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    /* ── TABS ── */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      margin-bottom: 28px;
+    }
+    .tab {
+      flex: 1; text-align: center;
+      padding-bottom: 12px;
+      font-size: 13px;
+      letter-spacing: 1px;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+      user-select: none;
+    }
+    .tab.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    /* ── FORM ── */
+    .form { display: flex; flex-direction: column; gap: 16px; }
+
+    .field { display: flex; flex-direction: column; gap: 7px; }
+    .field label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .input-wrap { position: relative; }
+    .input-wrap svg {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      opacity: 0.35;
+    }
+    input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 3px;
+      padding: 12px 14px 12px 40px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input::placeholder { color: rgba(255,255,255,0.18); }
+    input:focus {
+      border-color: rgba(201,168,76,0.45);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.07);
+    }
+
+    .forgot {
+      text-align: right;
+      margin-top: -6px;
+    }
+    .forgot a {
+      font-size: 11px;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .forgot a:hover { color: var(--gold); }
+
+    /* ── BUTTON ── */
+    .btn {
+      margin-top: 4px;
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      border: none;
+      border-radius: 3px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 3px;
+      color: var(--dark);
+      cursor: pointer;
+      transition: background 0.25s, transform 0.15s, box-shadow 0.25s;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform: translateX(-100%);
+      transition: transform 0.4s;
+    }
+    .btn:hover { background: var(--gold-light); box-shadow: 0 4px 20px rgba(201,168,76,0.3); }
+    .btn:hover::after { transform: translateX(100%); }
+    .btn:active { transform: scale(0.98); }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0 16px;
+    }
+    .divider::before, .divider::after {
+      content: ''; flex: 1;
+      height: 1px; background: rgba(255,255,255,0.07);
+    }
+    .divider span { font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+
+    /* ── SOCIAL BUTTONS ── */
+    .socials { display: flex; gap: 10px; }
+    .social-btn {
+      flex: 1;
+      padding: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 3px;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px; color: var(--muted);
+      cursor: pointer;
+      transition: border-color 0.25s, color 0.25s, background 0.25s;
+    }
+    .social-btn:hover {
+      border-color: rgba(201,168,76,0.3);
+      color: var(--text);
+      background: rgba(201,168,76,0.05);
+    }
+
+    /* ── FOOTER NOTE ── */
+    .note {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--muted);
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+    .note a { color: var(--gold); text-decoration: none; }
+    .note a:hover { text-decoration: underline; }
+
+    /* ── REGISTER PANEL (hidden by default) ── */
+    .panel { display: none; }
+    .panel.active { display: flex; flex-direction: column; gap: 16px; }
+
+    /* ── PLANS (visible on register) ── */
+    .plans { display: flex; gap: 8px; margin-top: 2px; }
+    .plan {
+      flex: 1;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 3px;
+      padding: 10px 6px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.25s, background 0.25s;
+    }
+    .plan.selected {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.08);
+    }
+    .plan-name { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+    .plan.selected .plan-name { color: var(--gold); }
+    .plan-price { font-family: 'Bebas Neue', sans-serif; font-size: 18px; color: var(--text); margin-top: 2px; }
+    .plan-period { font-size: 9px; color: var(--muted); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SCROLLBAR (just in case) ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg"></div>
+<div class="grain"></div>
+
+<!-- Film strips -->
+<div class="filmstrip">
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+</div>
+<div class="filmstrip-r">
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+  <div class="hole"></div><div class="hole"></div><div class="hole"></div>
+</div>
+
+<!-- Page -->
+<div class="page">
+
+  <!-- Logo -->
+  <div class="logo">
+    <div class="logo-icon"></div>
+    <h1>Cine<span>Vault</span></h1>
+    <p>Filmes &amp; Séries — Ilimitado</p>
+  </div>
+
+  <!-- Card -->
+  <div class="card">
+    <div class="tabs">
+      <div class="tab active" id="tab-login" onclick="switchTab('login')">Entrar</div>
+      <div class="tab" id="tab-register" onclick="switchTab('register')">Criar conta</div>
+    </div>
+
+    <!-- LOGIN PANEL -->
+    <div class="panel active" id="panel-login">
+      <div class="form">
+        <div class="field">
+          <label>E-mail</label>
+          <div class="input-wrap">
+            <svg width="16" height="16" fill="none" stroke="#c9a84c" stroke-width="1.5" viewBox="0 0 24 24">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/>
+            </svg>
+            <input type="email" placeholder="seu@email.com" autocomplete="email"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <div class="input-wrap">
+            <svg width="16" height="16" fill="none" stroke="#c9a84c" stroke-width="1.5" viewBox="0 0 24 24">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" placeholder="••••••••" autocomplete="current-password"/>
+          </div>
+        </div>
+        <div class="forgot"><a href="#">Esqueci minha senha</a></div>
+        <button class="btn" onclick="handleLogin()">Entrar</button>
+      </div>
+
+      <div class="divider"><span>ou</span></div>
+      <div class="socials">
+        <button class="social-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Google
+        </button>
+        <button class="social-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="white">
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0 1 12 6.836a9.59 9.59 0 0 1 2.504.337c1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
+          </svg>
+          GitHub
+        </button>
+      </div>
+    </div>
+
+    <!-- REGISTER PANEL -->
+    <div class="panel" id="panel-register">
+      <div class="form">
+        <div class="field">
+          <label>Nome completo</label>
+          <div class="input-wrap">
+            <svg width="16" height="16" fill="none" stroke="#c9a84c" stroke-width="1.5" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+            <input type="text" placeholder="Seu nome" autocomplete="name"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>E-mail</label>
+          <div class="input-wrap">
+            <svg width="16" height="16" fill="none" stroke="#c9a84c" stroke-width="1.5" viewBox="0 0 24 24">
+              <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/>
+            </svg>
+            <input type="email" placeholder="seu@email.com" autocomplete="email"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <div class="input-wrap">
+            <svg width="16" height="16" fill="none" stroke="#c9a84c" stroke-width="1.5" viewBox="0 0 24 24">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            <input type="password" placeholder="Mín. 8 caracteres" autocomplete="new-password"/>
+          </div>
+        </div>
+
+        <!-- Plans -->
+        <div class="field">
+          <label>Plano</label>
+          <div class="plans">
+            <div class="plan" id="plan-basic" onclick="selectPlan('basic')">
+              <div class="plan-name">Basic</div>
+              <div class="plan-price">R$19</div>
+              <div class="plan-period">/mês</div>
+            </div>
+            <div class="plan selected" id="plan-plus" onclick="selectPlan('plus')">
+              <div class="plan-name">Plus</div>
+              <div class="plan-price">R$34</div>
+              <div class="plan-period">/mês</div>
+            </div>
+            <div class="plan" id="plan-ultra" onclick="selectPlan('ultra')">
+              <div class="plan-name">Ultra</div>
+              <div class="plan-price">R$49</div>
+              <div class="plan-period">/mês</div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn" onclick="handleRegister()">Criar conta</button>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <p class="note" id="bottom-note">
+    Novo por aqui? <a href="#" onclick="switchTab('register'); return false;">Crie sua conta grátis</a>
+  </p>
+
+</div><!-- /page -->
+
+<script>
+  function switchTab(tab) {
+    const panels = ['login','register'];
+    panels.forEach(p => {
+      document.getElementById('tab-'+p).classList.toggle('active', p===tab);
+      document.getElementById('panel-'+p).classList.toggle('active', p===tab);
+    });
+    const note = document.getElementById('bottom-note');
+    if (tab === 'login') {
+      note.innerHTML = 'Novo por aqui? <a href="#" onclick="switchTab(\'register\'); return false;">Crie sua conta grátis</a>';
+    } else {
+      note.innerHTML = 'Já tem conta? <a href="#" onclick="switchTab(\'login\'); return false;">Faça login</a>';
+    }
+  }
+
+  function selectPlan(plan) {
+    ['basic','plus','ultra'].forEach(p => {
+      document.getElementById('plan-'+p).classList.toggle('selected', p===plan);
+    });
+  }
+
+  function handleLogin() {
+    const btn = document.querySelector('#panel-login .btn');
+    btn.textContent = '●  ●  ●';
+    btn.style.letterSpacing = '6px';
+    setTimeout(() => {
+      btn.textContent = '✓  Bem-vindo';
+      btn.style.background = '#2ecc71';
+      setTimeout(() => {
+        btn.textContent = 'Entrar';
+        btn.style.background = '';
+        btn.style.letterSpacing = '';
+      }, 2000);
+    }, 1200);
+  }
+
+  function handleRegister() {
+    const btn = document.querySelector('#panel-register .btn');
+    btn.textContent = '●  ●  ●';
+    btn.style.letterSpacing = '6px';
+    setTimeout(() => {
+      btn.textContent = '✓  Conta criada!';
+      btn.style.background = '#2ecc71';
+      setTimeout(() => {
+        btn.textContent = 'Criar conta';
+        btn.style.background = '';
+        btn.style.letterSpacing = '';
+      }, 2000);
+    }, 1200);
+  }
+</script>
+</body>
+</html>
