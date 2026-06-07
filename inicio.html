@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CineVault — Início</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --gold:#c9a84c;--gold-l:#e8c96e;--red:#c0392b;--red2:#e74c3c;
+  --dark:#080a0f;--dark2:#0e1119;--dark3:#161b26;--dark4:#1e2535;
+  --glass:rgba(255,255,255,0.04);--glass2:rgba(255,255,255,0.07);
+  --border:rgba(201,168,76,0.18);--border2:rgba(255,255,255,0.07);
+  --text:#e8e2d5;--muted:#7a7060;--muted2:#b0a898;
+}
+
+html{scroll-behavior:smooth}
+body{
+  background:var(--dark);font-family:'Outfit',sans-serif;
+  color:var(--text);min-height:100vh;overflow-x:hidden;
+}
+
+/* ── GRAIN ── */
+body::after{
+  content:'';position:fixed;inset:0;z-index:999;pointer-events:none;
+  opacity:.025;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;
+}
+
+/* ══════════════════════════════
+   NAV
+══════════════════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:linear-gradient(180deg,rgba(8,10,15,.95) 0%,rgba(8,10,15,0) 100%);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid rgba(201,168,76,0.08);
+}
+.nav-logo{
+  display:flex;align-items:center;gap:10px;text-decoration:none;
+}
+.nav-logo-icon{
+  width:34px;height:34px;border:1.5px solid var(--gold);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--gold);
+}
+.nav-logo-text{
+  font-family:'Bebas Neue',sans-serif;font-size:24px;
+  letter-spacing:4px;color:var(--text);
+}
+.nav-logo-text span{color:var(--gold)}
+.nav-links{display:flex;gap:6px}
+.nav-link{
+  padding:6px 14px;font-size:12px;letter-spacing:1px;
+  color:var(--muted);text-decoration:none;border-radius:2px;
+  transition:color .2s,background .2s;
+}
+.nav-link:hover,.nav-link.active{color:var(--text);background:var(--glass2)}
+.nav-link.active{color:var(--gold)}
+.nav-right{display:flex;align-items:center;gap:12px}
+.nav-avatar{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--red));
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;font-weight:600;color:var(--dark);cursor:pointer;
+  border:2px solid rgba(201,168,76,0.3);
+}
+.nav-bell{
+  width:34px;height:34px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);transition:color .2s;border-radius:50%;
+  position:relative;
+}
+.nav-bell:hover{color:var(--text)}
+.notif-dot{
+  position:absolute;top:7px;right:7px;width:7px;height:7px;
+  background:var(--red2);border-radius:50%;border:1.5px solid var(--dark);
+}
+
+/* ══════════════════════════════
+   HERO
+══════════════════════════════ */
+.hero{
+  position:relative;height:100vh;min-height:560px;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 40px 60px;
+  overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(0deg,rgba(8,10,15,1) 0%,rgba(8,10,15,.6) 35%,rgba(8,10,15,.1) 70%,rgba(8,10,15,0) 100%),
+    linear-gradient(90deg,rgba(8,10,15,.9) 0%,transparent 60%);
+  z-index:1;
+}
+.hero-poster{
+  position:absolute;inset:0;z-index:0;
+  background:
+    radial-gradient(ellipse 100% 80% at 75% 40%,rgba(192,57,43,.25) 0%,transparent 55%),
+    radial-gradient(ellipse 60% 60% at 80% 20%,rgba(201,168,76,.12) 0%,transparent 50%),
+    linear-gradient(135deg,#0d0f18 0%,#1a0e0e 40%,#0e1020 100%);
+  /* In production: background-image: url('poster.jpg'); background-size: cover; */
+}
+/* Fake cinematic poster art */
+.hero-poster::before{
+  content:'';position:absolute;
+  right:5%;top:10%;width:45%;height:85%;
+  background:
+    radial-gradient(ellipse 60% 70% at 50% 40%,rgba(201,168,76,.07) 0%,transparent 70%),
+    linear-gradient(160deg,rgba(30,37,53,.8),rgba(14,17,25,.4));
+  border-left:1px solid rgba(201,168,76,.06);
+  clip-path:polygon(8% 0%,100% 0%,92% 100%,0% 100%);
+}
+
+.hero-content{position:relative;z-index:2;max-width:560px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:14px;
+  animation:fadeUp .8s .1s both;
+}
+.hero-badge::before{
+  content:'';width:24px;height:1px;background:var(--gold);
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(52px,7vw,88px);
+  line-height:.95;letter-spacing:2px;
+  color:var(--text);margin-bottom:16px;
+  animation:fadeUp .8s .2s both;
+}
+.hero-title span{color:var(--gold)}
+.hero-meta{
+  display:flex;align-items:center;gap:14px;
+  font-size:12px;color:var(--muted2);
+  margin-bottom:14px;
+  animation:fadeUp .8s .3s both;
+}
+.hero-meta .dot{width:3px;height:3px;background:var(--muted);border-radius:50%}
+.hero-rating{
+  display:flex;align-items:center;gap:5px;
+  font-size:13px;font-weight:600;color:var(--gold);
+}
+.hero-desc{
+  font-size:14px;line-height:1.7;color:var(--muted2);
+  max-width:420px;margin-bottom:28px;
+  animation:fadeUp .8s .35s both;
+}
+.hero-actions{
+  display:flex;gap:12px;
+  animation:fadeUp .8s .45s both;
+}
+.btn-play{
+  display:flex;align-items:center;gap:9px;
+  padding:13px 28px;
+  background:var(--gold);border:none;border-radius:2px;
+  font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:3px;
+  color:var(--dark);cursor:pointer;transition:all .25s;
+  position:relative;overflow:hidden;
+}
+.btn-play::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);
+  transform:translateX(-100%);transition:transform .4s;
+}
+.btn-play:hover{background:var(--gold-l);box-shadow:0 4px 24px rgba(201,168,76,.35)}
+.btn-play:hover::after{transform:translateX(100%)}
+.btn-info{
+  display:flex;align-items:center;gap:9px;
+  padding:13px 24px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:2px;
+  font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:3px;
+  color:var(--text);cursor:pointer;transition:all .25s;backdrop-filter:blur(4px);
+}
+.btn-info:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.2)}
+
+/* ══════════════════════════════
+   SEARCH
+══════════════════════════════ */
+.search-section{
+  position:relative;z-index:10;
+  margin:-32px 40px 0;
+  animation:fadeUp .8s .5s both;
+}
+.search-wrap{
+  background:var(--dark3);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:24px 28px;
+  display:flex;flex-direction:column;gap:16px;
+  box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+.search-label{
+  font-size:10px;letter-spacing:3px;text-transform:uppercase;
+  color:var(--muted);
+}
+.search-row{display:flex;gap:10px}
+.search-input-wrap{flex:1;position:relative}
+.search-input-wrap svg{
+  position:absolute;left:16px;top:50%;transform:translateY(-50%);
+  color:var(--muted);pointer-events:none;
+}
+#searchInput{
+  width:100%;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08);border-radius:3px;
+  padding:13px 16px 13px 46px;
+  font-family:'Outfit',sans-serif;font-size:15px;color:var(--text);
+  outline:none;transition:border-color .3s,box-shadow .3s;
+}
+#searchInput::placeholder{color:rgba(255,255,255,.2)}
+#searchInput:focus{border-color:rgba(201,168,76,.4);box-shadow:0 0 0 3px rgba(201,168,76,.06)}
+.search-btn{
+  padding:13px 28px;
+  background:var(--gold);border:none;border-radius:3px;
+  font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:2px;
+  color:var(--dark);cursor:pointer;transition:all .25s;white-space:nowrap;
+}
+.search-btn:hover{background:var(--gold-l);box-shadow:0 4px 16px rgba(201,168,76,.3)}
+.search-filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter-chip{
+  padding:6px 14px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  border-radius:20px;font-size:11px;letter-spacing:.5px;
+  color:var(--muted);cursor:pointer;transition:all .2s;
+}
+.filter-chip:hover{border-color:rgba(201,168,76,.3);color:var(--gold)}
+.filter-chip.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.08)}
+
+/* Search results dropdown */
+#searchResults{
+  display:none;position:absolute;top:calc(100% + 6px);left:0;right:0;
+  background:var(--dark3);border:1px solid var(--border);border-radius:3px;
+  overflow:hidden;z-index:200;
+  box-shadow:0 12px 40px rgba(0,0,0,.6);
+}
+.search-result-item{
+  display:flex;align-items:center;gap:14px;
+  padding:12px 16px;cursor:pointer;transition:background .15s;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.search-result-item:last-child{border-bottom:none}
+.search-result-item:hover{background:rgba(201,168,76,.07)}
+.sr-thumb{
+  width:40px;height:56px;border-radius:2px;
+  background:linear-gradient(135deg,var(--dark4),var(--dark3));
+  flex-shrink:0;border:1px solid rgba(255,255,255,.06);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+}
+.sr-info{flex:1}
+.sr-title{font-size:13px;font-weight:500;color:var(--text)}
+.sr-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.sr-type{
+  font-size:9px;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 8px;border-radius:2px;
+  background:rgba(201,168,76,.1);color:var(--gold);
+}
+
+/* ══════════════════════════════
+   SECTIONS
+══════════════════════════════ */
+.sections{padding:48px 40px 60px}
+
+.section{margin-bottom:48px}
+.section-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:20px;
+}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:3px;color:var(--text);
+  display:flex;align-items:center;gap:12px;
+}
+.section-title::before{
+  content:'';width:3px;height:18px;
+  background:var(--gold);border-radius:2px;
+}
+.section-link{
+  font-size:11px;letter-spacing:1px;color:var(--muted);
+  text-decoration:none;transition:color .2s;
+  display:flex;align-items:center;gap:4px;
+}
+.section-link:hover{color:var(--gold)}
+.section-link::after{content:'→';font-size:13px}
+
+/* ── CARDS GRID ── */
+.cards-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:14px;
+}
+.card{
+  position:relative;cursor:pointer;border-radius:3px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.04);
+  transition:transform .3s,box-shadow .3s;
+  animation:fadeUp .6s both;
+}
+.card:hover{transform:translateY(-6px) scale(1.02);box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 0 1px rgba(201,168,76,.2)}
+.card-poster{
+  aspect-ratio:2/3;
+  background:var(--dark4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;
+  position:relative;overflow:hidden;
+}
+.card-poster::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(8,10,15,.9) 0%,rgba(8,10,15,.2) 40%,transparent 70%);
+  z-index:1;opacity:0;transition:opacity .3s;
+}
+.card:hover .card-poster::before{opacity:1}
+.card-overlay{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  padding:12px;transform:translateY(100%);transition:transform .3s;
+}
+.card:hover .card-overlay{transform:translateY(0)}
+.play-circle{
+  width:38px;height:38px;border-radius:50%;
+  background:var(--gold);display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--dark);margin-bottom:6px;
+}
+.card-info{padding:10px 10px 12px}
+.card-title{font-size:13px;font-weight:500;color:var(--text);line-height:1.3;margin-bottom:4px}
+.card-meta{font-size:11px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.card-score{
+  display:flex;align-items:center;gap:3px;
+  font-size:11px;font-weight:600;color:var(--gold);
+}
+.card-badge{
+  position:absolute;top:8px;left:8px;z-index:3;
+  font-size:8px;letter-spacing:2px;text-transform:uppercase;
+  padding:3px 7px;border-radius:2px;
+}
+.badge-new{background:var(--red2);color:#fff}
+.badge-hot{background:var(--gold);color:var(--dark)}
+.badge-top{background:rgba(255,255,255,.15);color:var(--text);backdrop-filter:blur(4px)}
+
+/* ── FEATURED ROW (wide cards) ── */
+.featured-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:14px;
+}
+.featured-card{
+  position:relative;cursor:pointer;border-radius:3px;overflow:hidden;
+  border:1px solid rgba(255,255,255,.04);
+  transition:transform .3s,box-shadow .3s;
+  animation:fadeUp .6s both;
+}
+.featured-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(0,0,0,.6),0 0 0 1px rgba(201,168,76,.2)}
+.featured-poster{
+  aspect-ratio:16/9;
+  background:var(--dark4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:48px;position:relative;overflow:hidden;
+}
+.featured-poster::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(8,10,15,.95) 0%,rgba(8,10,15,.3) 50%,transparent 100%);
+}
+.featured-info{
+  padding:14px;
+  background:linear-gradient(180deg,rgba(14,17,25,0),var(--dark2));
+}
+.featured-title{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px}
+.featured-desc{font-size:12px;color:var(--muted);margin-top:4px;line-height:1.5}
+.featured-footer{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.progress-bar-wrap{height:2px;background:rgba(255,255,255,.1);border-radius:1px;flex:1;margin-right:10px}
+.progress-bar{height:100%;border-radius:1px;background:var(--gold)}
+
+/* ── CATEGORIES ── */
+.categories{
+  display:flex;gap:10px;flex-wrap:wrap;
+}
+.cat{
+  padding:10px 18px;
+  background:var(--glass);border:1px solid var(--border2);
+  border-radius:3px;font-size:12px;letter-spacing:1px;
+  color:var(--muted2);cursor:pointer;transition:all .2s;
+  display:flex;align-items:center;gap:8px;
+}
+.cat:hover{border-color:var(--border);color:var(--text);background:var(--glass2)}
+.cat-icon{font-size:16px}
+
+/* ══════════════════════════════
+   ANIMATIONS
+══════════════════════════════ */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.card:nth-child(1){animation-delay:.05s}
+.card:nth-child(2){animation-delay:.1s}
+.card:nth-child(3){animation-delay:.15s}
+.card:nth-child(4){animation-delay:.2s}
+.card:nth-child(5){animation-delay:.25s}
+.card:nth-child(6){animation-delay:.3s}
+.featured-card:nth-child(1){animation-delay:.05s}
+.featured-card:nth-child(2){animation-delay:.12s}
+.featured-card:nth-child(3){animation-delay:.19s}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(201,168,76,.2);border-radius:2px}
+
+/* ── RESPONSIVE ── */
+@media(max-width:600px){
+  nav{padding:0 16px}
+  .nav-links{display:none}
+  .hero{padding:0 20px 48px}
+  .search-section{margin:-20px 16px 0}
+  .search-wrap{padding:18px}
+  .search-row{flex-direction:column}
+  .sections{padding:32px 16px 48px}
+  .cards-row{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+  .featured-row{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══ -->
+<nav>
+  <a class="nav-logo" href="#">
+    <div class="nav-logo-icon">▶</div>
+    <span class="nav-logo-text">Cine<span>Vault</span></span>
+  </a>
+  <div class="nav-links">
+    <a class="nav-link active" href="#">Início</a>
+    <a class="nav-link" href="#">Filmes</a>
+    <a class="nav-link" href="#">Séries</a>
+    <a class="nav-link" href="#">Minha Lista</a>
+    <a class="nav-link" href="#">Em Breve</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-bell">
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+      </svg>
+      <span class="notif-dot"></span>
+    </div>
+    <div class="nav-avatar" title="Meu Perfil">U</div>
+  </div>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero">
+  <div class="hero-poster"></div>
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Em Destaque Hoje</div>
+    <h1 class="hero-title">Blade<br><span>Runner</span> 2049</h1>
+    <div class="hero-meta">
+      <span class="hero-rating">★ 8.0</span>
+      <span class="dot"></span>
+      <span>2017</span>
+      <span class="dot"></span>
+      <span>2h 44min</span>
+      <span class="dot"></span>
+      <span>Sci-Fi</span>
+    </div>
+    <p class="hero-desc">Um blade runner descobre um segredo enterrado há muito tempo que pode mergulhar o que resta da civilização no caos.</p>
+    <div class="hero-actions">
+      <button class="btn-play">
+        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        Assistir
+      </button>
+      <button class="btn-info">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Mais Info
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ SEARCH ══ -->
+<div class="search-section">
+  <div class="search-wrap">
+    <div class="search-label">Buscar filmes, séries, documentários...</div>
+    <div class="search-row">
+      <div class="search-input-wrap">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input id="searchInput" type="text" placeholder="Ex: Interestelar, Breaking Bad, Nolan..."/>
+        <div id="searchResults"></div>
+      </div>
+      <button class="search-btn" onclick="doSearch()">Buscar</button>
+    </div>
+    <div class="search-filters">
+      <span class="filter-chip active" onclick="toggleFilter(this)">Todos</span>
+      <span class="filter-chip" onclick="toggleFilter(this)">Filmes</span>
+      <span class="filter-chip" onclick="toggleFilter(this)">Séries</span>
+      <span class="filter-chip" onclick="toggleFilter(this)">Documentários</span>
+      <span class="filter-chip" onclick="toggleFilter(this)">Animações</span>
+      <span class="filter-chip" onclick="toggleFilter(this)">Lançamentos</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTIONS ══ -->
+<div class="sections">
+
+  <!-- Continue Assistindo -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Continue Assistindo</h2>
+      <a class="section-link" href="#">Ver tudo</a>
+    </div>
+    <div class="featured-row">
+      <div class="featured-card">
+        <div class="featured-poster" style="background:linear-gradient(135deg,#1a0e2e,#0a1628)">🌌</div>
+        <div class="featured-info">
+          <div class="featured-title">Interestelar</div>
+          <div class="featured-desc">Uma equipe de astronautas viaja além das fronteiras do universo.</div>
+          <div class="featured-footer">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:67%"></div></div>
+            <span style="font-size:11px;color:var(--muted)">67%</span>
+          </div>
+        </div>
+      </div>
+      <div class="featured-card">
+        <div class="featured-poster" style="background:linear-gradient(135deg,#1a1a0a,#2a1500)">⚗️</div>
+        <div class="featured-info">
+          <div class="featured-title">Breaking Bad — T3</div>
+          <div class="featured-desc">Walter White mergulha cada vez mais fundo no mundo do crime.</div>
+          <div class="featured-footer">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:42%"></div></div>
+            <span style="font-size:11px;color:var(--muted)">Ep. 5 de 13</span>
+          </div>
+        </div>
+      </div>
+      <div class="featured-card">
+        <div class="featured-poster" style="background:linear-gradient(135deg,#0a1a0a,#162b16)">🌿</div>
+        <div class="featured-info">
+          <div class="featured-title">Planet Earth III</div>
+          <div class="featured-desc">Narrado por David Attenborough. A vida selvagem em todo seu esplendor.</div>
+          <div class="featured-footer">
+            <div class="progress-bar-wrap"><div class="progress-bar" style="width:20%"></div></div>
+            <span style="font-size:11px;color:var(--muted)">Ep. 2 de 8</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recomendados para Você -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Recomendados para Você</h2>
+      <a class="section-link" href="#">Ver tudo</a>
+    </div>
+    <div class="cards-row" id="recommended-grid">
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#1a0e0e,#2d1a00)">🎭</div>
+        <span class="card-badge badge-hot">Em Alta</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Oppenheimer</div>
+          <div class="card-meta"><span class="card-score">★ 8.9</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2023</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#0e1a2a,#001a3a)">🚀</div>
+        <span class="card-badge badge-new">Novo</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Duna: Parte 2</div>
+          <div class="card-meta"><span class="card-score">★ 8.5</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2024</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#1a1200,#2a2000)">⚔️</div>
+        <span class="card-badge badge-top">Top 10</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">The Last of Us</div>
+          <div class="card-meta"><span class="card-score">★ 8.8</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>Série</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#1a0a1a,#2a0a30)">🕵️</div>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">True Detective</div>
+          <div class="card-meta"><span class="card-score">★ 9.0</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>Série</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#001a10,#00301a)">🧬</div>
+        <span class="card-badge badge-new">Novo</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Severance T2</div>
+          <div class="card-meta"><span class="card-score">★ 9.1</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>Série</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#1a1a00,#1a0000)">🎸</div>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Whiplash</div>
+          <div class="card-meta"><span class="card-score">★ 8.5</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2014</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Lançamentos -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Lançamentos da Semana</h2>
+      <a class="section-link" href="#">Ver tudo</a>
+    </div>
+    <div class="cards-row">
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#0a0a1a,#1a2a40)">🌊</div>
+        <span class="card-badge badge-new">Estreia</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Aquaman 2</div>
+          <div class="card-meta"><span class="card-score">★ 6.5</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2024</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#1a0a00,#3a1500)">🔥</div>
+        <span class="card-badge badge-new">Estreia</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Furiosa</div>
+          <div class="card-meta"><span class="card-score">★ 7.8</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2024</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#001520,#002535)">🧊</div>
+        <span class="card-badge badge-new">Estreia</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">The Substance</div>
+          <div class="card-meta"><span class="card-score">★ 7.3</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2024</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#1a001a,#300030)">👁️</div>
+        <span class="card-badge badge-new">Estreia</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Longlegs</div>
+          <div class="card-meta"><span class="card-score">★ 5.9</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2024</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#0a1a0a,#153015)">🌳</div>
+        <span class="card-badge badge-new">Estreia</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Civil War</div>
+          <div class="card-meta"><span class="card-score">★ 7.1</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2024</div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-poster" style="background:linear-gradient(135deg,#20100a,#35180a)">🎪</div>
+        <span class="card-badge badge-new">Estreia</span>
+        <div class="card-overlay"><div class="play-circle">▶</div></div>
+        <div class="card-info">
+          <div class="card-title">Wonka</div>
+          <div class="card-meta"><span class="card-score">★ 7.2</span><span class="dot" style="width:3px;height:3px;background:var(--muted);border-radius:50%"></span>2023</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Categorias -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">Explorar Categorias</h2>
+    </div>
+    <div class="categories">
+      <div class="cat"><span class="cat-icon">🚀</span>Ficção Científica</div>
+      <div class="cat"><span class="cat-icon">🔪</span>Terror</div>
+      <div class="cat"><span class="cat-icon">💥</span>Ação</div>
+      <div class="cat"><span class="cat-icon">😂</span>Comédia</div>
+      <div class="cat"><span class="cat-icon">❤️</span>Romance</div>
+      <div class="cat"><span class="cat-icon">🕵️</span>Suspense</div>
+      <div class="cat"><span class="cat-icon">🎬</span>Drama</div>
+      <div class="cat"><span class="cat-icon">🌍</span>Documentário</div>
+      <div class="cat"><span class="cat-icon">✨</span>Animação</div>
+      <div class="cat"><span class="cat-icon">🏆</span>Premiados</div>
+    </div>
+  </div>
+
+</div><!-- /sections -->
+
+<script>
+/* ── SEARCH AUTOCOMPLETE ── */
+const mockDB=[
+  {title:"Interestelar",year:"2014",type:"Filme",emoji:"🌌"},
+  {title:"Inception",year:"2010",type:"Filme",emoji:"🌀"},
+  {title:"The Dark Knight",year:"2008",type:"Filme",emoji:"🦇"},
+  {title:"Breaking Bad",year:"2008",type:"Série",emoji:"⚗️"},
+  {title:"Stranger Things",year:"2016",type:"Série",emoji:"👁️"},
+  {title:"The Witcher",year:"2019",type:"Série",emoji:"⚔️"},
+  {title:"Blade Runner 2049",year:"2017",type:"Filme",emoji:"🤖"},
+  {title:"Duna",year:"2021",type:"Filme",emoji:"🏜️"},
+  {title:"Duna: Parte 2",year:"2024",type:"Filme",emoji:"🚀"},
+  {title:"Oppenheimer",year:"2023",type:"Filme",emoji:"💥"},
+  {title:"Parasite",year:"2019",type:"Filme",emoji:"🏠"},
+  {title:"Severance",year:"2022",type:"Série",emoji:"🧬"},
+  {title:"The Last of Us",year:"2023",type:"Série",emoji:"🌿"},
+  {title:"True Detective",year:"2014",type:"Série",emoji:"🕵️"},
+  {title:"Chernobyl",year:"2019",type:"Série",emoji:"☢️"},
+  {title:"Planet Earth III",year:"2023",type:"Documentário",emoji:"🌍"},
+];
+
+const input=document.getElementById('searchInput');
+const results=document.getElementById('searchResults');
+
+input.addEventListener('input',()=>{
+  const q=input.value.trim().toLowerCase();
+  if(!q){results.style.display='none';return;}
+  const hits=mockDB.filter(m=>m.title.toLowerCase().includes(q)).slice(0,5);
+  if(!hits.length){results.style.display='none';return;}
+  results.innerHTML=hits.map(h=>`
+    <div class="search-result-item" onclick="selectResult('${h.title}')">
+      <div class="sr-thumb">${h.emoji}</div>
+      <div class="sr-info">
+        <div class="sr-title">${h.title}</div>
+        <div class="sr-meta">${h.year}</div>
+      </div>
+      <span class="sr-type">${h.type}</span>
+    </div>
+  `).join('');
+  results.style.display='block';
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.search-input-wrap'))
+    results.style.display='none';
+});
+
+function selectResult(title){
+  input.value=title;
+  results.style.display='none';
+}
+
+function doSearch(){
+  const q=input.value.trim();
+  if(!q)return;
+  input.style.borderColor='rgba(201,168,76,.6)';
+  setTimeout(()=>input.style.borderColor='',800);
+}
+
+/* ── FILTERS ── */
+function toggleFilter(el){
+  document.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+}
+
+/* ── CARD HOVER ── */
+document.querySelectorAll('.card,.featured-card').forEach(c=>{
+  c.addEventListener('click',()=>{
+    c.style.borderColor='rgba(201,168,76,.4)';
+    setTimeout(()=>c.style.borderColor='',600);
+  });
+});
+</script>
+</body>
+</html>
